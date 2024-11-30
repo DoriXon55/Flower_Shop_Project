@@ -1,0 +1,9 @@
+{% for flower in flowers %}
+  <div class="flower">
+    <img src="{{ flower.image.url }}" alt="{{ flower.name }}">
+    <h3>{{ flower.name }}</h3>
+    <p>{{ flower.description }}</p>
+    <p>Price: {{ flower.price }} PLN</p>
+    <a href="{% url 'flower_detail' flower.id %}">Details</a>
+  </div>
+{% endfor %}

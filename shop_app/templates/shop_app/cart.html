@@ -1,0 +1,8 @@
+<h1>Your Cart</h1>
+<ul>
+  {% for item in cart_items %}
+    <li>{{ item.flower.name }} - {{ item.quantity }} pcs - {{ item.flower.price }} PLN each</li>
+  {% endfor %}
+</ul>
+<p>Total Price: {{ total_price }} PLN</p>
+<a href="{% url 'checkout' %}">Proceed to Checkout</a>

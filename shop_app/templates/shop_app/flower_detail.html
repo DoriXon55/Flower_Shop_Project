@@ -1,0 +1,5 @@
+<h1>{{ flower.name }}</h1>
+<img src="{{ flower.image.url }}" alt="{{ flower.name }}">
+<p>{{ flower.description }}</p>
+<p>Price: {{ flower.price }} PLN</p>
+<a href="{% url 'add_to_cart' flower.id %}">Add to Cart</a>
