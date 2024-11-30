@@ -1,9 +1,20 @@
-{% for flower in flowers %}
-  <div class="flower">
-    <img src="{{ flower.image.url }}" alt="{{ flower.name }}">
-    <h3>{{ flower.name }}</h3>
-    <p>{{ flower.description }}</p>
-    <p>Price: {{ flower.price }} PLN</p>
-    <a href="{% url 'flower_detail' flower.id %}">Details</a>
-  </div>
-{% endfor %}
+{% extends 'shop_app/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="view-switch">
+    <a href="?view=grid">Grid View</a>
+    <a href="?view=list">List View</a>
+</div>
+<div class="flowers {% if view_type == 'grid' %}grid{% else %}list{% endif %}">
+    {% for flower in flowers %}
+        <div class="flower-card">
+            <img src="{{ flower.image.url }}" alt="{{ flower.flower_name }}">
+            <h3>{{ flower.flower_name }}</h3>
+            <p>{{ flower.price }} PLN</p>
+            <a href="{% url 'flower_detail' flower.flower_id %}">Details</a>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

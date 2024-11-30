@@ -1,0 +1,25 @@
+{% extends 'shop_app/base.html' %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<h1>Checkout</h1>
+<form method="post">
+    {% csrf_token %}
+    <label>Payment Method:</label>
+    <select name="payment_type">
+        {% for payment in PaymentType.objects.all %}
+            <option value="{{ payment.payment_type_id }}">{{ payment.payment_name }}</option>
+        {% endfor %}
+    </select>
+
+    <label>Delivery Option:</label>
+    <select name="delivery_name">
+        {% for delivery in DeliveryName.objects.all %}
+            <option value="{{ delivery.delivery_name_id }}">{{ delivery.firm_name }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Place Order</button>
+</form>
+{% endblock %}

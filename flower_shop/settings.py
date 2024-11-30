@@ -76,11 +76,11 @@ WSGI_APPLICATION = 'flower_shop.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': "florist's",
+        'NAME': 'florist\'s',
         'USER': 'root',
-        'PASSWORD':"",
-        'HOST': str('localhost'),
-        'PORT': str('3306'),
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 

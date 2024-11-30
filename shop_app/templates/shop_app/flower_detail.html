@@ -1,5 +1,18 @@
-<h1>{{ flower.name }}</h1>
-<img src="{{ flower.image.url }}" alt="{{ flower.name }}">
-<p>{{ flower.description }}</p>
-<p>Price: {{ flower.price }} PLN</p>
-<a href="{% url 'add_to_cart' flower.id %}">Add to Cart</a>
+{% extends 'shop_app/base.html' %}
+
+{% block title %}{{ flower.flower_name }}{% endblock %}
+
+{% block content %}
+<div class="flower-detail">
+    <img src="{{ flower.image.url }}" alt="{{ flower.flower_name }}">
+    <h1>{{ flower.flower_name }}</h1>
+    <p>{{ flower.price }} PLN</p>
+    <p>{{ flower.description }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <label>Quantity:</label>
+        <input type="number" name="quantity" value="1" min="1">
+        <button type="submit">Add to Cart</button>
+    </form>
+</div>
+{% endblock %}

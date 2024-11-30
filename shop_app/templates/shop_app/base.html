@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Flower Shop{% endblock %}</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Flower Shop</h1>
+            <nav>
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'cart' %}">Cart</a>
+                <a href="{% url 'register' %}">Register</a>
+            </nav>
+        </div>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2024 Flower Shop</p>
+    </footer>
+    <!-- JavaScript -->
+    <script src="{% static 'js/main.js' %}" defer></script>
+</body>
+</html>

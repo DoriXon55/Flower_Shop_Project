@@ -1,8 +1,17 @@
+{% extends 'shop_app/base.html' %}
+
+{% block title %}Cart{% endblock %}
+
+{% block content %}
 <h1>Your Cart</h1>
 <ul>
-  {% for item in cart_items %}
-    <li>{{ item.flower.name }} - {{ item.quantity }} pcs - {{ item.flower.price }} PLN each</li>
-  {% endfor %}
+    {% for item in cart_items %}
+        <li>
+            {{ item.flower.flower_name }} - {{ item.quantity }} pcs - {{ item.flower.price }} PLN each
+            <a href="{% url 'remove_from_cart' item.flower.flower_id %}">Remove</a>
+        </li>
+    {% endfor %}
 </ul>
-<p>Total Price: {{ total_price }} PLN</p>
-<a href="{% url 'checkout' %}">Proceed to Checkout</a>
+<p>Total: {{ total_price }} PLN</p>
+<a href="{% url 'checkout' %}">Checkout</a>
+{% endblock %}

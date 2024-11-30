@@ -1,0 +1,31 @@
+/* Animacja wczytywania kwiatów */
+.flower-card {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease-in-out;
+}
+
+.flower-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Przejście między widokami siatki/listy */
+.flowers.grid .flower-card {
+    display: inline-block;
+    width: 30%;
+    margin: 1%;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out;
+}
+
+.flowers.list .flower-card {
+    display: block;
+    width: 90%;
+    margin: 1% auto;
+}
+
+/* Hover efekt */
+.flower-card:hover {
+    transform: scale(1.05);
+}
