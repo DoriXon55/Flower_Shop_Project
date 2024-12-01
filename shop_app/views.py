@@ -1,6 +1,8 @@
+from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Flower
+from . models import Flower, Individual, Firm, Customer
 from datetime import timedelta, datetime
+
 
 def home(request):
     flowers = Flower.objects.all()
@@ -27,3 +29,28 @@ def remove_from_cart(request, flower_id):
         del cart[str(flower_id)]
         request.session['cart'] = cart
     return redirect('cart')
+def register(request):
+    if request.method == 'POST':
+        user_type = request.POST.get('user_type', 'individual')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = User.objects.create_user(username=username, password=password)
+        customer = Customer.objects.create(customer_contact=request.POST.get('contact'), address=request.POST.get('address'))
+
+        if user_type == 'individual':
+            Individual.objects.create(
+                customer=customer,
+                individual_name=request.POST.get('first_name'),
+                surname=request.POST.get('last_name')
+            )
+        elif user_type == 'firm':
+            Firm.objects.create(
+                customer=customer,
+                name=request.POST.get('firm_name'),
+                NIP=request.POST.get('NIP')
+            )
+
+        return redirect('home')
+
+    return render(request, 'shop_app/register.html')

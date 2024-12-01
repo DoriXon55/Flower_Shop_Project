@@ -18,8 +18,9 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-
+from shop_app import views
 urlpatterns = [
+    path('', views.home, name='home'),  # Widok główny dla '/'
     path('register/', views.register, name='register'),
     path('admin/', admin.site.urls),
 ]
