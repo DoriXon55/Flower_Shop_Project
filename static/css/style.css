@@ -1,31 +1,55 @@
-/* Animacja wczytywania kwiatów */
-.flower-card {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.3s ease-in-out;
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
 }
 
-.flower-card.visible {
-    opacity: 1;
-    transform: translateY(0);
+header {
+    background-color: #4CAF50;
+    padding: 1rem;
 }
 
-/* Przejście między widokami siatki/listy */
-.flowers.grid .flower-card {
-    display: inline-block;
-    width: 30%;
-    margin: 1%;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease-in-out;
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
 }
 
-.flowers.list .flower-card {
-    display: block;
-    width: 90%;
-    margin: 1% auto;
+nav ul li {
+    margin: 0 20px;
 }
 
-/* Hover efekt */
-.flower-card:hover {
-    transform: scale(1.05);
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+}
+
+.flower-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px;
+}
+
+.flower-item {
+    background-color: white;
+    padding: 15px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-to-cart {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-to-cart:hover {
+    background-color: #45a049;
 }

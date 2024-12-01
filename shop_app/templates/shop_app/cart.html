@@ -2,16 +2,11 @@
 
 {% block title %}Cart{% endblock %}
 
-{% block content %}
-<h1>Your Cart</h1>
-<ul>
-    {% for item in cart_items %}
-        <li>
-            {{ item.flower.flower_name }} - {{ item.quantity }} pcs - {{ item.flower.price }} PLN each
-            <a href="{% url 'remove_from_cart' item.flower.flower_id %}">Remove</a>
-        </li>
-    {% endfor %}
-</ul>
-<p>Total: {{ total_price }} PLN</p>
-<a href="{% url 'checkout' %}">Checkout</a>
-{% endblock %}
+{% for item in cart.values %}
+    <div class="cart-item">
+        <h4>{{ item.name }}</h4>
+        <p>Price: {{ item.price }} zł</p>
+        <p>Quantity: {{ item.quantity }}</p>
+    </div>
+{% endfor %}
+<p>Total Price: {{ total_price }} zł</p>

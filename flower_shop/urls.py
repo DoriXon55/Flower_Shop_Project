@@ -20,7 +20,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from shop_app import views
 urlpatterns = [
-    path('', views.home, name='home'),  # Widok główny dla '/'
+    path('', views.home, name='home'),
+    path('flower/<int:flower_id>/', views.flower_detail, name='flower_detail'),
+    path('cart/', views.cart_view, name='cart'),
+    path('cart/remove/<int:flower_id>/', views.remove_from_cart, name='remove_from_cart'),
     path('register/', views.register, name='register'),
-    path('admin/', admin.site.urls),
+    path('checkout/', views.checkout, name='checkout'),  # Dodaj widok checkout
+
+    path('add_to_cart/<int:flower_id>/', views.add_to_cart, name='add_to_cart'),
 ]
