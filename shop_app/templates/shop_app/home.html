@@ -1,23 +1,22 @@
 {% extends 'shop_app/base.html' %}
-
 {% load static %}
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Lista Kwiatów</title>
-</head>
-<body>
-    <h1>Witamy w sklepie internetowym!</h1>
-    <h2>Nasza oferta kwiatów:</h2>
-    <ul>
-        {% for flower in flowers %}
-            <li>
-                <h3>{{ flower.name }}</h3>
-                <p>Cena: {{ flower.price }} zł</p>
-                <p>{{ flower.description }}</p>
-            </li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% block title %}Flower Shop{% endblock %}
+{% block content %}
+<h1>Our Flower Collection</h1>
+
+<div class="view-toggle">
+    <a href="?view=grid">Grid View</a>
+    <a href="?view=list">List View</a>
+</div>
+
+<div class="flower-list {% if view_type == 'grid' %}grid-view{% else %}list-view{% endif %}">
+    {% for flower in flowers %}
+        <div class="flower-card">
+            <img src="{{ flower.image_url }}" alt="{{ flower.flower_name }}">
+            <h3>{{ flower.flower_name }}</h3>
+            <p>{{ flower.price }} PLN</p>
+            <a href="{% url 'flower_detail' flower.flower_id %}">View Details</a>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

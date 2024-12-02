@@ -1,14 +1,19 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Flower, Individual, Firm, Customer, OrderFlower, Order
+from .models import Flower, Individual, Firm, Customer, OrderFlower, Order, PaymentType, DeliveryName, Status, Delivery, \
+    Employee
 from datetime import timedelta, datetime
 from django.contrib import messages
 
 
 def home(request):
     flowers = Flower.objects.all()
-    view_type = request.GET.get('view', 'grid')  # Domyślnie siatka
-    return render(request, 'shop_app/home.html', {'flowers': flowers, 'view_type': view_type})
+    view_type = request.GET.get('view', 'grid')  # Domyślnie widok siatki
+    return render(request, 'shop_app/home.html', {
+        'flowers': flowers,
+        'view_type': view_type
+    })
+
 def flower_detail(request, flower_id):
     flower = get_object_or_404(Flower, flower_id=flower_id)
     if request.method == 'POST':  # Dodanie do koszyka
@@ -23,16 +28,10 @@ def cart_view(request):
     cart_items = [{'flower': flower, 'quantity': cart[str(flower.flower_id)]} for flower in flowers]
     total_price = sum(item['flower'].price * item['quantity'] for item in cart_items)
 
-    if request.method == 'POST':
-        flower_id = request.POST.get('flower_id')
-        new_quantity = request.POST.get('quantity')
-
-        # Aktualizowanie ilości kwiatów
-        if new_quantity:
-            cart[str(flower_id)]['quantity'] = int(new_quantity)
-            request.session['cart'] = cart
-
-    return render(request, 'shop_app/cart.html', {'cart_items': cart_items, 'total_price': total_price})
+    return render(request, 'shop_app/cart.html', {
+        'cart_items': cart_items,
+        'total_price': total_price
+    })
 
 
 def add_to_cart(request, flower_id):
@@ -66,12 +65,16 @@ def remove_from_cart(request, flower_id):
 def register(request):
     if request.method == 'POST':
         user_type = request.POST.get('user_type', 'individual')
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        contact = request.POST.get('contact')
+        address = request.POST.get('address')
 
-        user = User.objects.create_user(username=username, password=password)
-        customer = Customer.objects.create(customer_contact=request.POST.get('contact'), address=request.POST.get('address'))
+        # Dodawanie klienta do bazy
+        customer = Customer.objects.create(
+            customer_contact=contact,
+            address=address
+        )
 
+        # Dostosowanie danych w zależności od typu użytkownika
         if user_type == 'individual':
             Individual.objects.create(
                 customer=customer,
@@ -85,9 +88,13 @@ def register(request):
                 NIP=request.POST.get('NIP')
             )
 
+        messages.success(request, "Rejestracja zakończona sukcesem!")
         return redirect('home')
 
     return render(request, 'shop_app/register.html')
+
+from random import choice
+
 def checkout(request):
     cart = request.session.get('cart', {})
     flowers = Flower.objects.filter(flower_id__in=cart.keys())
@@ -95,17 +102,35 @@ def checkout(request):
     total_price = sum(item['flower'].price * item['quantity'] for item in cart_items)
 
     if request.method == 'POST':
-        # Stworzenie zamówienia
-        customer = request.user.customer
-        order = Order.objects.create(customer=customer, total_amount=total_price)
+        # Dodawanie zamówienia
+        customer = Customer.objects.first()  # Przykład: pobierz zalogowanego klienta
+        employee = choice(Employee.objects.all())  # Losowy pracownik
+        delivery = Delivery.objects.create(
+            delivery_data=datetime.now() + timedelta(days=3),
+            delivery_name=DeliveryName.objects.first(),
+            status=Status.objects.first()
+        )
+        order = Order.objects.create(
+            total_amount=total_price,
+            customer=customer,
+            employee=employee,
+            delivery=delivery,
+            payment_type=PaymentType.objects.first()
+        )
 
         # Dodanie kwiatów do zamówienia
         for item in cart_items:
-            OrderFlower.objects.create(order=order, flower=item['flower'], quantity=item['quantity'])
+            OrderFlower.objects.create(
+                order=order,
+                flower=item['flower'],
+                quantity=item['quantity']
+            )
 
-        # Po zapisaniu zamówienia, usunięcie koszyka
-        request.session['cart'] = {}
-
+        request.session['cart'] = {}  # Opróżnij koszyk
+        messages.success(request, "Zamówienie zostało złożone!")
         return redirect('home')
 
-    return render(request, 'shop_app/checkout.html', {'cart_items': cart_items, 'total_price': total_price})
+    return render(request, 'shop_app/checkout.html', {
+        'cart_items': cart_items,
+        'total_price': total_price
+    })

@@ -16,5 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("JS loaded!");
+});
 
 
