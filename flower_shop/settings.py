@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'flower_shop.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'florist\'s',
+        'NAME': 'florists',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
