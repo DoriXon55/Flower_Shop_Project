@@ -3,23 +3,54 @@
 {% block title %}Checkout{% endblock %}
 
 {% block content %}
-<h1>Checkout</h1>
+<h2>Checkout</h2>
 <form method="post">
     {% csrf_token %}
-    <label>Payment Method:</label>
+    <label>User Type:</label>
+    <select name="user_type" id="user_type" onchange="toggleFields()">
+        <option value="individual">Individual</option>
+        <option value="firm">Firm</option>
+    </select>
+
+    <!-- Individual Fields -->
+    <div id="individual_fields" style="display: none;">
+        <input type="text" name="first_name" placeholder="First Name" required>
+        <input type="text" name="last_name" placeholder="Last Name" required>
+    </div>
+
+    <!-- Firm Fields -->
+    <div id="firm_fields" style="display: none;">
+        <input type="text" name="firm_name" placeholder="Firm Name" required>
+        <input type="text" name="NIP" placeholder="NIP" required>
+    </div>
+
+    <input type="text" name="contact" placeholder="Contact" required>
+    <input type="text" name="address" placeholder="Address" required>
+
+    <label>Payment Option:</label>
     <select name="payment_type">
-        {% for payment in PaymentType.objects.all %}
+        {% for payment in payment_types %}
             <option value="{{ payment.payment_type_id }}">{{ payment.payment_name }}</option>
         {% endfor %}
     </select>
 
     <label>Delivery Option:</label>
     <select name="delivery_name">
-        {% for delivery in DeliveryName.objects.all %}
+        {% for delivery in delivery_names %}
             <option value="{{ delivery.delivery_name_id }}">{{ delivery.firm_name }}</option>
         {% endfor %}
     </select>
 
     <button type="submit">Place Order</button>
 </form>
+
+<script>
+function toggleFields() {
+    const userType = document.getElementById('user_type').value;
+    document.getElementById('individual_fields').style.display = userType === 'individual' ? 'block' : 'none';
+    document.getElementById('firm_fields').style.display = userType === 'firm' ? 'block' : 'none';
+}
+document.getElementById('user_type').addEventListener('change', toggleFields);
+toggleFields();  // Initialize on page load
+</script>
 {% endblock %}

@@ -37,6 +37,7 @@ class Customer(models.Model):
 
     def __str__(self):
         return f"Customer {self.customer_id}"
+
     class Meta:
         db_table = 'customer'
         managed = False
@@ -46,6 +47,7 @@ class Individual(models.Model):
     customer = models.OneToOneField(Customer, on_delete=models.CASCADE, primary_key=True)
     individual_name = models.CharField(max_length=255, null=True, blank=True)
     surname = models.CharField(max_length=255, null=True, blank=True)
+
     class Meta:
         db_table = 'individual'
         managed = False
@@ -54,6 +56,7 @@ class Firm(models.Model):
     customer = models.OneToOneField(Customer, on_delete=models.CASCADE, primary_key=True)
     name = models.CharField(max_length=255, null=True, blank=True)
     NIP = models.CharField(max_length=14, null=True, blank=True)
+
     class Meta:
         db_table = 'firm'
         managed = False
@@ -71,8 +74,6 @@ class Order(models.Model):
     class Meta:
         db_table = 'orders'
         managed = False
-    def __str__(self):
-        return f"Order {self.order_id}"
 
 # Kwiaty w zamówieniach
 class OrderFlower(models.Model):
@@ -89,6 +90,7 @@ class Delivery(models.Model):
     delivery_data = models.DateField(null=True, blank=True)
     delivery_name = models.ForeignKey('DeliveryName', on_delete=models.SET_NULL, null=True, blank=True)
     status = models.ForeignKey('Status', on_delete=models.SET_NULL, null=True, blank=True)
+
     class Meta:
         db_table = 'delivery'
         managed = False
@@ -98,6 +100,7 @@ class Delivery(models.Model):
 class DeliveryName(models.Model):
     delivery_name_id = models.AutoField(primary_key=True)
     firm_name = models.CharField(max_length=255, null=True, blank=True)
+
     def __str__(self):
         return self.firm_name
 

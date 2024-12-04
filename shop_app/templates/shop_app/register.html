@@ -1,14 +1,11 @@
 {% extends 'shop_app/base.html' %}
-{% load static %}
-
 {% block title %}Register{% endblock %}
-
 {% block content %}
 <h1>Register</h1>
 <form method="post">
     {% csrf_token %}
     <label>Account Type:</label>
-    <select name="user_type">
+    <select name="user_type" id="user_type">
         <option value="individual">Individual</option>
         <option value="firm">Firm</option>
     </select>
@@ -31,26 +28,13 @@
     <input type="text" name="contact">
     <label>Address:</label>
     <input type="text" name="address">
-    <label>Username:</label>
-    <input type="text" name="username">
-    <label>Password:</label>
-    <input type="password" name="password">
     <button type="submit">Register</button>
 </form>
 
 <script>
-    const userTypeSelect = document.querySelector('select[name="user_type"]');
-    const individualFields = document.getElementById('individual-fields');
-    const firmFields = document.getElementById('firm-fields');
-
-    userTypeSelect.addEventListener('change', () => {
-        if (userTypeSelect.value === 'individual') {
-            individualFields.style.display = 'block';
-            firmFields.style.display = 'none';
-        } else {
-            individualFields.style.display = 'none';
-            firmFields.style.display = 'block';
-        }
+    document.getElementById('user_type').addEventListener('change', function() {
+        document.getElementById('individual-fields').style.display = this.value === 'individual' ? 'block' : 'none';
+        document.getElementById('firm-fields').style.display = this.value === 'firm' ? 'block' : 'none';
     });
 </script>
 {% endblock %}
