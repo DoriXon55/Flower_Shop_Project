@@ -29,3 +29,11 @@
 .flower-card:hover {
     transform: scale(1.05);
 }
+
+.flower-card img {
+    width: 300px; /* Ustal stałą szerokość */
+    height: 300px; /* Ustal stałą wysokość */
+    object-fit: cover; /* Dopasowanie obrazu */
+    border-radius: 5px; /* Zaokrąglenie rogów (opcjonalne) */
+}
+

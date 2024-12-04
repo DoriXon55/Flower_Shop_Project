@@ -7,26 +7,68 @@
     <title>{% block title %}Flower Shop{% endblock %}</title>
 
     <!-- CSS -->
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <header>
         <div class="header-container">
-            <h1>Flower Shop</h1>
+            <h1>Bydgoska Kwiaciarnia</h1>
             <nav>
-                <a href="{% url 'home' %}">Home</a>
-                <a href="{% url 'cart' %}">Cart</a>
-                <a href="{% url 'register' %}">Register</a>
+                <a href="{% url 'home' %}">Strona Główna</a>
+                <a href="{% url 'cart' %}">Koszyk</a>
+                <a href="{% url 'register' %}">Rejestracja</a>
             </nav>
         </div>
     </header>
+
+    <!-- Flash Messages Section -->
+    {% if messages %}
+        <div id="messages">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                    <div class="message-progress"></div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <main>
         {% block content %}{% endblock %}
     </main>
+
     <footer>
-        <p>&copy; 2024 Flower Shop</p>
+        <p>&copy; 2024 Kwiaciarnia</p>
     </footer>
+
     <!-- JavaScript -->
-    <script src="{% static 'js/main.js' %}" defer></script>
+    <script >
+        document.addEventListener('DOMContentLoaded', () => {
+    const messages = document.querySelectorAll('#messages .message');
+    messages.forEach((message) => {
+        const progressBar = message.querySelector('.message-progress');
+
+        // Start a timer for the progress bar and message removal
+        let progressWidth = 100;
+        const intervalDuration = 50; // Time in milliseconds for each step
+        const totalDuration = 5000; // Total duration in milliseconds (5 seconds)
+        const step = progressWidth / (totalDuration / intervalDuration);
+
+        const interval = setInterval(() => {
+            progressWidth -= step;
+            if (progressWidth <= 0) {
+                clearInterval(interval);
+                // Fade out and remove the message
+                message.style.transition = 'opacity 0.5s ease';
+                message.style.opacity = '0';
+                setTimeout(() => message.remove(), 500); // Remove after fade-out
+            } else {
+                progressBar.style.width = `${progressWidth}%`;
+            }
+        }, intervalDuration);
+    });
+});
+
+    </script>
 </body>
 </html>

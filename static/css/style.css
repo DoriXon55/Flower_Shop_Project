@@ -1,37 +1,388 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa; /* Jasnoszary kolor dla całej strony */
     margin: 0;
     padding: 0;
 }
 
 header {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
+    background-color: #ffffff; /* Biały kolor tła nagłówka */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtelny cień */
+    text-align: center; /* Wycentrowanie zawartości */
+    padding: 20px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 header h1 {
+    font-size: 2.5em;
+    color: #333; /* Ciemnoszary kolor tekstu */
     margin: 0;
 }
 
+nav {
+    margin-top: 10px;
+}
+
 nav a {
-    color: white;
-    margin: 0 10px;
+    color: #4CAF50; /* Zielony kolor linków */
+    margin: 0 15px;
     text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2em;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: #45a049; /* Ciemniejszy zielony na hover */
+}
+
+h1, h2, h4 {
+    text-align: center;
+    color: #333;
+}
+
+/* Układ siatki dla kwiatów */
+.flower-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
 }
 
 .flower-card {
-    border: 1px solid #ddd;
-    padding: 15px;
-    margin: 10px;
+    flex: 1 1 calc(25% - 20px); /* Box zajmuje 1/4 szerokości */
+    max-width: 300px; /* Maksymalna szerokość boxa */
+    background-color: #ffffff; /* Biały kolor tła */
+    border-radius: 12px; /* Zaokrąglone rogi */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtelny cień */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animacje */
+    overflow: hidden;
     text-align: center;
-    border-radius: 5px;
+    padding: 20px;
+}
+
+.flower-card:hover {
+    transform: translateY(-10px); /* Efekt podniesienia na hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Zwiększony cień */
 }
 
 .flower-card img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
+    width: 100%; /* Dopasowanie obrazu do szerokości */
+    height: auto; /* Automatyczne skalowanie */
+    border-radius: 8px; /* Zaokrąglenie rogów obrazka */
+    margin-bottom: 15px;
 }
+
+.flower-card h3 {
+    font-size: 1.5em; /* Większy rozmiar nagłówka */
+    color: #333; /* Ciemnoszary kolor */
+    margin-bottom: 10px;
+}
+
+.flower-card p {
+    font-size: 1.2em;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+/* Styl nowoczesny dla pola wyboru ilości */
+.flower-card input[type="number"] {
+    width: 60px;
+    padding: 5px;
+    font-size: 1em;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-right: 10px;
+}
+
+/* Styl dla przycisku */
+.flower-card button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.flower-card button:hover {
+    background-color: #45a049;
+    transform: scale(1.05); /* Powiększenie przycisku na hover */
+}
+
+/* Responsywność */
+@media (max-width: 768px) {
+    .flower-card {
+        flex: 1 1 calc(50% - 20px);
+    }
+}
+
+@media (max-width: 480px) {
+    .flower-card {
+        flex: 1 1 100%;
+    }
+}
+
+/* Stopka (opcjonalne dopracowanie wyglądu) */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #ffffff;
+    border-top: 1px solid #ddd;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Cart Page */
+.cart-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+}
+
+.cart-item {
+    flex: 1 1 calc(50% - 20px);
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 300px;
+}
+
+.cart-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.cart-item a {
+    color: #f44336;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.cart-item a:hover {
+    color: #d32f2f;
+}
+
+/* Checkout Page */
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+
+form input, form select, form button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+}
+
+form button {
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #45a049;
+}
+
+/* Flower Detail Page */
+.flower-detail {
+    text-align: center;
+    padding: 20px;
+}
+
+.flower-detail img {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.flower-detail form {
+    display: inline-block;
+    margin-top: 15px;
+}
+
+.flower-detail form input[type="number"] {
+    width: 70px;
+    margin-right: 10px;
+    text-align: center;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.flower-detail form button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.flower-detail form button:hover {
+    background-color: #45a049;
+}
+
+/* Register and Login Pages */
+h2, h1 {
+    color: #333;
+    text-align: center;
+}
+
+form input {
+    width: calc(100% - 20px);
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: block;
+}
+
+form select {
+    width: calc(100% - 20px);
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: block;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .cart-item {
+        flex: 1 1 calc(100% - 20px);
+    }
+
+    form {
+        width: 90%;
+    }
+}
+/* Kontener podsumowania koszyka */
+.cart-summary-container {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #f9f9f9; /* Jasne tło dla wyodrębnienia sekcji */
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Tekst "Cena całego zamówienia" */
+.cart-summary {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Przycisk "Przejdź do płatności" */
+.checkout-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.checkout-button:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+/* Kontener wiadomości */
+#messages {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 300px;
+    z-index: 1000;
+}
+
+/* Wygląd wiadomości */
+.message {
+    background-color: #f0f8f8;
+    color: #333;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Zielony dla sukcesu */
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+/* Czerwony dla błędu */
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Pasek postępu */
+.message-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background-color: #28a745;
+    animation: progress-bar 3s linear forwards;
+}
+
+/* Animacja */
+@keyframes progress-bar {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0;
+    }
+}
+
+
+
 

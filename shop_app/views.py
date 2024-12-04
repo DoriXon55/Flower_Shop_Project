@@ -84,44 +84,61 @@ def remove_from_cart(request, flower_id):
         del cart[str(flower_id)]
         request.session['cart'] = cart
     return redirect('cart')
+
+
+from django.core.exceptions import ValidationError
+
+
 def register(request):
     if request.method == 'POST':
-        user_type = request.POST.get('user_type', 'individual')
+        user_type = request.POST.get('user_type')
         contact = request.POST.get('contact')
         address = request.POST.get('address')
 
-        # Dodawanie klienta do bazy
-        customer = Customer.objects.create(
-            customer_contact=contact,
-            address=address
-        )
+        if not contact or not address:
+            messages.error(request, "Contact and Address are required.")
+            return redirect('register')
 
-        # Dostosowanie danych w zależności od typu użytkownika
-        if user_type == 'individual':
-            Individual.objects.create(
-                customer=customer,
-                individual_name=request.POST.get('first_name'),
-                surname=request.POST.get('last_name')
-            )
-        elif user_type == 'firm':
-            Firm.objects.create(
-                customer=customer,
-                name=request.POST.get('firm_name'),
-                NIP=request.POST.get('NIP')
+        try:
+            # Create the common Customer
+            customer = Customer.objects.create(
+                customer_contact=contact,
+                address=address
             )
 
-        messages.success(request, "Rejestracja zakończona sukcesem!")
-        return redirect('home')
+            if user_type == 'individual':
+                first_name = request.POST.get('first_name')
+                last_name = request.POST.get('last_name')
+
+                if not first_name or not last_name:
+                    raise ValidationError("First Name and Last Name are required for individuals.")
+
+                Individual.objects.create(
+                    customer=customer,
+                    individual_name=first_name,
+                    surname=last_name
+                )
+            elif user_type == 'firm':
+                firm_name = request.POST.get('firm_name')
+                nip = request.POST.get('NIP')
+
+                if not firm_name or not nip:
+                    raise ValidationError("Firm Name and NIP are required for firms.")
+
+                Firm.objects.create(
+                    customer=customer,
+                    name=firm_name,
+                    NIP=nip
+                )
+
+            messages.success(request, "Registration successful!")
+            return redirect('home')
+        except ValidationError as e:
+            messages.error(request, str(e))
+            return redirect('register')
 
     return render(request, 'shop_app/register.html')
 
-
-
-from random import randint
-from datetime import datetime, timedelta
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .models import Customer, Individual, Firm, Order, Delivery, OrderFlower, Flower, PaymentType, DeliveryName, Status, Employee
 
 def checkout(request):
     cart = request.session.get('cart', {})
@@ -137,24 +154,38 @@ def checkout(request):
         contact = request.POST.get('contact')
         address = request.POST.get('address')
 
-        # Step 2: Create or associate a Customer
-        customer = Customer.objects.create(
-            customer_contact=contact,
-            address=address
-        )
+        # Step 2: Validate form data
+        if not user_type or not contact or not address:
+            messages.error(request, "Wypełnij wszystkie wymagane pola.")
+            return redirect('checkout')
 
         if user_type == 'individual':
-            Individual.objects.create(
-                customer=customer,
-                individual_name=request.POST.get('first_name'),
-                surname=request.POST.get('last_name')
-            )
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            if not first_name or not last_name:
+                messages.error(request, "Wypełnij wszystkie pola dla klienta indywidualnego.")
+                return redirect('checkout')
+
+            # Create Individual
+            customer = Customer.objects.create(customer_contact=contact, address=address)
+            Individual.objects.create(customer=customer, individual_name=first_name, surname=last_name)
+
         elif user_type == 'firm':
-            Firm.objects.create(
-                customer=customer,
-                name=request.POST.get('firm_name'),
-                NIP=request.POST.get('NIP')
-            )
+            firm_name = request.POST.get('firm_name')
+            nip = request.POST.get('NIP')
+            if not firm_name or not nip:
+                messages.error(request, "Wypełnij wszystkie pola dla firmy.")
+                return redirect('checkout')
+
+            # Create Firm
+            customer = Customer.objects.create(customer_contact=contact, address=address)
+            Firm.objects.create(customer=customer, name=firm_name, NIP=nip)
+
+        else:
+            messages.error(request, "Nieprawidłowy typ użytkownika.")
+            return redirect('checkout')
+
+
 
         # Step 3: Assign a random Employee (1-15)
         employee = Employee.objects.order_by('?').first()
@@ -186,7 +217,7 @@ def checkout(request):
 
         # Clear the cart and confirm order
         request.session['cart'] = {}
-        messages.success(request, "Your order has been placed successfully!")
+        messages.success(request, "Twoje zamówienie zostało złożone pomyślnie!")
         return redirect('home')
 
     # Prepare data for the template
@@ -198,6 +229,6 @@ def checkout(request):
         'payment_types': payment_types,
         'delivery_names': delivery_names
     })
+
 def order_confirmation(request, order_id):
     return HttpResponse(f"Order placed successfully! Your order number is {order_id}.")
-
