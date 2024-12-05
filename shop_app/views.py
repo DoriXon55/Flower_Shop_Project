@@ -173,6 +173,10 @@ from django.db.models import Q
 def checkout(request):
     # Pobieranie koszyka z sesji
     cart = request.session.get('cart', {})
+    if not cart:
+        messages.error(request, "Twój koszyk jest pusty. Dodaj kwiaty do koszyka przed złożeniem zamówienia.")
+        return redirect('cart')
+
     flowers = Flower.objects.filter(flower_id__in=cart.keys())
     cart_items = [{'flower': flower, 'quantity': cart[str(flower.flower_id)]['quantity']} for flower in flowers]
     total_price = sum(item['flower'].price * item['quantity'] for item in cart_items)
@@ -182,6 +186,10 @@ def checkout(request):
         user_type = request.POST.get('user_type')
         payment_type_id = request.POST.get('payment_type')
         delivery_name_id = request.POST.get('delivery_name')
+
+        if not user_type or not payment_type_id or not delivery_name_id:
+            messages.error(request, "Wypełnij wszystkie wymagane pola.")
+            return redirect('checkout')
 
         customer = None
 
@@ -212,6 +220,9 @@ def checkout(request):
             if user_type == 'individual':
                 individual_name = request.POST.get('individual_name_register')
                 last_name = request.POST.get('last_name')
+                if not individual_name or not last_name:
+                    messages.error(request, "Wypełnij wszystkie pola dla klienta indywidualnego.")
+                    return redirect('checkout')
                 if Customer.objects.filter(customer_contact=customer_contact).exists():
                     messages.error(request, "Użytkownik z takim numerem telefonu już istnieje. Spróbuj się zalogować.")
                     return redirect('checkout')
@@ -220,6 +231,9 @@ def checkout(request):
             elif user_type == 'firm':
                 nip = request.POST.get('nip_register')
                 firm_name = request.POST.get('firm_name')
+                if not firm_name or not nip:
+                    messages.error(request, "Wypełnij wszystkie pola dla firmy.")
+                    return redirect('checkout')
                 if Customer.objects.filter(customer_contact=customer_contact).exists():
                     messages.error(request, "Użytkownik z takim numerem telefonu już istnieje. Spróbuj się zalogować.")
                     return redirect('checkout')
@@ -262,7 +276,7 @@ def checkout(request):
         # Czyszczenie koszyka i potwierdzenie zamówienia
         request.session['cart'] = {}
         messages.success(request, f"Twoje zamówienie zostało złożone pomyślnie! Numer zamówienia: {order.order_id}")
-        return redirect('order_confirmation', order_id=order.order_id)
+        return redirect('home')
 
     # Przygotowanie danych dla szablonu
     payment_types = PaymentType.objects.all()

@@ -85,5 +85,29 @@
     document.getElementById('action').addEventListener('change', toggleFields);
     document.getElementById('user_type').addEventListener('change', toggleFields);
     document.addEventListener('DOMContentLoaded', toggleFields);
+
+
+
+
+    // Function to hide messages after 5 seconds
+    setTimeout(function() {
+        const messages = document.querySelectorAll('.message');
+        messages.forEach(function(message) {
+            message.style.display = 'none';
+        });
+    }, 5000);
+
+    // Function to redirect to home page after order confirmation
+    function redirectToHome() {
+        setTimeout(function() {
+            window.location.href = "{% url 'home' %}";
+        }, 5000);
+    }
+
+    // Check if the order confirmation message is present
+    const orderConfirmationMessage = document.querySelector('.order-confirmation');
+    if (orderConfirmationMessage) {
+        redirectToHome();
+    }
 </script>
 {% endblock %}
