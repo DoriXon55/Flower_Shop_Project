@@ -164,26 +164,29 @@ def register(request):
 
     return render(request, 'shop_app/register.html')
 
-
 def checkout(request):
+    # Pobieranie koszyka z sesji
     cart = request.session.get('cart', {})
     flowers = Flower.objects.filter(flower_id__in=cart.keys())
     cart_items = [{'flower': flower, 'quantity': cart[str(flower.flower_id)]['quantity']} for flower in flowers]
     total_price = sum(item['flower'].price * item['quantity'] for item in cart_items)
 
     if request.method == 'POST':
-        # Step 1: Gather form inputs
+        # Krok 1: Pobieranie danych z formularza
         user_type = request.POST.get('user_type')
         payment_type_id = request.POST.get('payment_type')
         delivery_name_id = request.POST.get('delivery_name')
         contact = request.POST.get('contact')
         address = request.POST.get('address')
 
-        # Step 2: Validate form data
+        # Walidacja danych formularza
         if not user_type or not contact or not address:
             messages.error(request, "Wypełnij wszystkie wymagane pola.")
             return redirect('checkout')
 
+        customer = None
+
+        # Logika dla użytkownika indywidualnego
         if user_type == 'individual':
             first_name = request.POST.get('first_name')
             last_name = request.POST.get('last_name')
@@ -191,10 +194,19 @@ def checkout(request):
                 messages.error(request, "Wypełnij wszystkie pola dla klienta indywidualnego.")
                 return redirect('checkout')
 
-            # Create Individual
-            customer = Customer.objects.create(customer_contact=contact, address=address)
-            Individual.objects.create(customer=customer, individual_name=first_name, surname=last_name)
+            # Sprawdzenie czy klient indywidualny już istnieje
+            individual = Individual.objects.filter(
+                customer__customer_contact=contact
+            ).first()
 
+            if individual:
+                customer = individual.customer
+            else:
+                # Tworzenie nowego klienta indywidualnego
+                customer = Customer.objects.create(customer_contact=contact, address=address)
+                Individual.objects.create(customer=customer, individual_name=first_name, surname=last_name)
+
+        # Logika dla firmy
         elif user_type == 'firm':
             firm_name = request.POST.get('firm_name')
             nip = request.POST.get('NIP')
@@ -202,26 +214,35 @@ def checkout(request):
                 messages.error(request, "Wypełnij wszystkie pola dla firmy.")
                 return redirect('checkout')
 
-            # Create Firm
-            customer = Customer.objects.create(customer_contact=contact, address=address)
-            Firm.objects.create(customer=customer, name=firm_name, NIP=nip)
+            # Sprawdzenie czy firma już istnieje
+            firm = Firm.objects.filter(
+                customer__customer_contact=contact,
+                NIP=nip
+            ).first()
+
+            if firm:
+                customer = firm.customer
+            else:
+                # Tworzenie nowej firmy
+                customer = Customer.objects.create(customer_contact=contact, address=address)
+                Firm.objects.create(customer=customer, name=firm_name, NIP=nip)
 
         else:
             messages.error(request, "Nieprawidłowy typ użytkownika.")
             return redirect('checkout')
 
-        # Step 3: Assign a random Employee (1-15)
+        # Krok 3: Wybór losowego pracownika
         employee = Employee.objects.order_by('?').first()
 
-        # Step 4: Create the Delivery instance
-        delivery_date = datetime.now() + timedelta(days=3)
+        # Krok 4: Tworzenie dostawy
+        delivery_date = datetime.now() + timedelta(days=3)  # Dostawa za 3 dni
         delivery = Delivery.objects.create(
             delivery_data=delivery_date,
             delivery_name_id=delivery_name_id,
-            status=Status.objects.get(status_id=2)  # For example, "Paid" status
+            status=Status.objects.get(status_id=2)  # Przykładowy status np. "Opłacone"
         )
 
-        # Step 5: Create the Order and link with Delivery
+        # Krok 5: Tworzenie zamówienia
         order = Order.objects.create(
             total_amount=total_price,
             customer=customer,
@@ -230,7 +251,7 @@ def checkout(request):
             payment_type_id=payment_type_id
         )
 
-        # Step 6: Add flowers to OrderFlower
+        # Krok 6: Dodanie kwiatów do zamówienia
         for item in cart_items:
             OrderFlower.objects.create(
                 order=order,
@@ -238,12 +259,12 @@ def checkout(request):
                 quantity=item['quantity']
             )
 
-        # Clear the cart and confirm order
+        # Czyszczenie koszyka i potwierdzenie zamówienia
         request.session['cart'] = {}
-        messages.success(request, "Twoje zamówienie zostało złożone pomyślnie!")
-        return redirect('home')
+        messages.success(request, f"Twoje zamówienie zostało złożone pomyślnie! Numer zamówienia: {order.order_id}")
+        return redirect('order_confirmation', order_id=order.order_id)
 
-    # Prepare data for the template
+    # Przygotowanie danych dla szablonu
     payment_types = PaymentType.objects.all()
     delivery_names = DeliveryName.objects.all()
     return render(request, 'shop_app/checkout.html', {
@@ -255,4 +276,4 @@ def checkout(request):
 
 
 def order_confirmation(request, order_id):
-    return HttpResponse(f"Order placed successfully! Your order number is {order_id}.")
+    return HttpResponse(f"Zamówienie zostało złożone pomyślnie! Twój numer zamówienia to {order_id}.")
