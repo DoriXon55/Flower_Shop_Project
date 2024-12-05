@@ -3,55 +3,56 @@
 {% block title %}Checkout{% endblock %}
 
 {% block content %}
-<h2>Podsumowanie</h2>
-<form method="post">
-    {% csrf_token %}
-    <label>Kim jesteś?</label>
-    <select name="user_type" id="user_type" onchange="toggleFields()" required>
-        <option value="" disabled selected>Wybierz opcję</option>
-        <option value="individual">Klient indywidualny</option>
-        <option value="firm">Firma</option>
-    </select>
+    <h2>Podsumowanie</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label>Kim jesteś?</label>
+        <select name="user_type" id="user_type" onchange="toggleFields()" required>
+            <option value="" disabled selected>Wybierz opcję</option>
+            <option value="individual">Klient indywidualny</option>
+            <option value="firm">Firma</option>
+        </select>
 
-    <!-- Individual Fields -->
-    <div id="individual_fields" style="display: none;">
-        <input type="text" name="first_name" placeholder="Imię">
-        <input type="text" name="last_name" placeholder="Nazwisko">
-    </div>
+        <!-- Individual Fields -->
+        <div id="individual_fields" style="display: none;">
+            <input type="text" name="first_name" placeholder="Imię">
+            <input type="text" name="last_name" placeholder="Nazwisko">
+        </div>
 
-    <!-- Firm Fields -->
-    <div id="firm_fields" style="display: none;">
-        <input type="text" name="firm_name" placeholder="Nazwa firmy">
-        <input type="text" name="NIP" placeholder="NIP">
-    </div>
+        <!-- Firm Fields -->
+        <div id="firm_fields" style="display: none;">
+            <input type="text" name="firm_name" placeholder="Nazwa firmy">
+            <input type="text" name="NIP" placeholder="NIP">
+        </div>
 
-    <input type="text" name="contact" placeholder="Kontakt" required>
-    <input type="text" name="address" placeholder="Adres" required>
+        <input type="text" name="contact" placeholder="Kontakt" required>
+        <input type="text" name="address" placeholder="Adres" required>
 
-    <label>Opcje płatności:</label>
-    <select name="payment_type">
-        {% for payment in payment_types %}
-            <option value="{{ payment.payment_type_id }}">{{ payment.payment_name }}</option>
-        {% endfor %}
-    </select>
+        <label>Opcje płatności:</label>
+        <select name="payment_type">
+            {% for payment in payment_types %}
+                <option value="{{ payment.payment_type_id }}">{{ payment.payment_name }}</option>
+            {% endfor %}
+        </select>
 
-    <label>Opcje Dostawy:</label>
-    <select name="delivery_name">
-        {% for delivery in delivery_names %}
-            <option value="{{ delivery.delivery_name_id }}">{{ delivery.firm_name }}</option>
-        {% endfor %}
-    </select>
+        <label>Opcje Dostawy:</label>
+        <select name="delivery_name">
+            {% for delivery in delivery_names %}
+                <option value="{{ delivery.delivery_name_id }}">{{ delivery.firm_name }}</option>
+            {% endfor %}
+        </select>
 
-    <button type="submit">Złóż zamówienie</button>
-</form>
+        <button type="submit">Złóż zamówienie</button>
+    </form>
 
-<script>
-function toggleFields() {
-    const userType = document.getElementById('user_type').value;
-    document.getElementById('individual_fields').style.display = userType === 'individual' ? 'block' : 'none';
-    document.getElementById('firm_fields').style.display = userType === 'firm' ? 'block' : 'none';
-}
-document.getElementById('user_type').addEventListener('change', toggleFields);
-toggleFields();
-</script>
+    <script>
+        function toggleFields() {
+            const userType = document.getElementById('user_type').value;
+            document.getElementById('individual_fields').style.display = userType === 'individual' ? 'block' : 'none';
+            document.getElementById('firm_fields').style.display = userType === 'firm' ? 'block' : 'none';
+        }
+
+        document.getElementById('user_type').addEventListener('change', toggleFields);
+        toggleFields();
+    </script>
 {% endblock %}

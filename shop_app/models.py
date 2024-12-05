@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Kolory kwiatów
 class Color(models.Model):
     color_id = models.AutoField(primary_key=True)
@@ -7,9 +8,12 @@ class Color(models.Model):
 
     def __str__(self):
         return self.color_name
+
     class Meta:
         db_table = 'color'
         managed = False
+
+
 # Kwiaty
 class Flower(models.Model):
     flower_id = models.AutoField(primary_key=True)
@@ -18,9 +22,12 @@ class Flower(models.Model):
 
     def __str__(self):
         return self.flower_name
+
     class Meta:
         db_table = 'flower'
         managed = False
+
+
 # Relacja wielu-wielu między kwiatami a kolorami
 class FlowerColor(models.Model):
     flower = models.ForeignKey(Flower, on_delete=models.CASCADE)
@@ -29,6 +36,8 @@ class FlowerColor(models.Model):
     class Meta:
         db_table = 'flowercolor'
         managed = False
+
+
 # Klienci
 class Customer(models.Model):
     customer_id = models.AutoField(primary_key=True)
@@ -42,6 +51,7 @@ class Customer(models.Model):
         db_table = 'customer'
         managed = False
 
+
 # Osoby fizyczne
 class Individual(models.Model):
     customer = models.OneToOneField(Customer, on_delete=models.CASCADE, primary_key=True)
@@ -51,6 +61,8 @@ class Individual(models.Model):
     class Meta:
         db_table = 'individual'
         managed = False
+
+
 # Firmy
 class Firm(models.Model):
     customer = models.OneToOneField(Customer, on_delete=models.CASCADE, primary_key=True)
@@ -60,6 +72,7 @@ class Firm(models.Model):
     class Meta:
         db_table = 'firm'
         managed = False
+
 
 # Zamówienia
 class Order(models.Model):
@@ -75,6 +88,7 @@ class Order(models.Model):
         db_table = 'orders'
         managed = False
 
+
 # Kwiaty w zamówieniach
 class OrderFlower(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
@@ -84,6 +98,8 @@ class OrderFlower(models.Model):
     class Meta:
         db_table = 'orderflower'
         managed = False
+
+
 # Dostawa
 class Delivery(models.Model):
     delivery_id = models.AutoField(primary_key=True)
@@ -108,6 +124,7 @@ class DeliveryName(models.Model):
         db_table = 'deliveryname'
         managed = False
 
+
 # Typy płatności
 class PaymentType(models.Model):
     payment_type_id = models.AutoField(primary_key=True)
@@ -115,9 +132,11 @@ class PaymentType(models.Model):
 
     def __str__(self):
         return self.payment_name
+
     class Meta:
         db_table = 'paymenttype'
         managed = False
+
 
 # Statusy zamówień
 class Status(models.Model):
@@ -130,6 +149,7 @@ class Status(models.Model):
     class Meta:
         db_table = 'status'
         managed = False
+
 
 # Pracownicy
 class Employee(models.Model):

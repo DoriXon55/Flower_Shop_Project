@@ -1,16 +1,16 @@
 {% extends 'shop_app/base.html' %}
 {% block title %}{{ flower.flower_name }}{% endblock %}
 {% block content %}
-<div class="flower-detail">
-    <img src="{{ flower.image_url }}" alt="{{ flower.flower_name }}">
-    <h2>{{ flower.flower_name }}</h2>
-    <p>{{ flower.description }}</p>
-    <p>{{ flower.price }} PLN</p>
-    <form action="{% url 'add_to_cart' flower.flower_id %}" method="post">
-        {% csrf_token %}
-        <label>Quantity:</label>
-        <input type="number" name="quantity" value="1" min="1">
-        <button type="submit">Add to Cart</button>
-    </form>
-</div>
+    <div class="flower-detail">
+        <img src="{{ flower.image_url }}" alt="{{ flower.flower_name }}">
+        <h2>{{ flower.flower_name }}</h2>
+        <p>{{ flower.description }}</p>
+        <p>{{ flower.price }} PLN</p>
+        <form action="{% url 'add_to_cart' flower.flower_id %}" method="post">
+            {% csrf_token %}
+            <label>Quantity:</label>
+            <input type="number" name="quantity" value="1" min="1">
+            <button type="submit">Add to Cart</button>
+        </form>
+    </div>
 {% endblock %}

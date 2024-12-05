@@ -1,22 +1,23 @@
 {% extends 'shop_app/base.html' %}
 {% load static %}
-    {% block title %}Flower Shop{% endblock %}
+{% block title %}Flower Shop{% endblock %}
 {% block content %}
-<h1>Nasza kolekcja kwiatów</h1>
+    <h1>Nasza kolekcja kwiatów</h1>
 
-<div class="flower-list">
-    {% for flower in flowers %}
-        <div class="flower-card">
-            <img src="{% static 'images/' %}{{ flower.flower_name|lower }}.jpg" alt="{{ flower.flower_name }}" alt="zdjęcie {{ flower.flower_name }}", height="300" width="300">
-            <h3>{{ flower.flower_name }}</h3>
-            <p>{{ flower.price }} PLN</p>
-            <form action="{% url 'add_to_cart' flower.flower_id %}" method="post">
-                {% csrf_token %}
-                <input type="number" name="quantity" value="1" min="1">
-                <button type="submit">Add to Cart</button>
-            </form>
-        </div>
-    {% endfor %}
-</div>
+    <div class="flower-list">
+        {% for flower in flowers %}
+            <div class="flower-card">
+                <img src="{% static 'images/' %}{{ flower.flower_name|lower }}.jpg" alt="{{ flower.flower_name }}"
+                     alt="zdjęcie {{ flower.flower_name }}" , height="300" width="300">
+                <h3>{{ flower.flower_name }}</h3>
+                <p>{{ flower.price }} PLN</p>
+                <form action="{% url 'add_to_cart' flower.flower_id %}" method="post">
+                    {% csrf_token %}
+                    <input type="number" name="quantity" value="1" min="1">
+                    <button type="submit">Add to Cart</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
 
 {% endblock %}

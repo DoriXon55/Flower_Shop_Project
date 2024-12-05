@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -139,7 +138,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Firm',
             fields=[
-                ('customer', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='shop_app.customer')),
+                ('customer',
+                 models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False,
+                                      to='shop_app.customer')),
                 ('name', models.CharField(blank=True, max_length=255, null=True)),
                 ('NIP', models.CharField(blank=True, max_length=14, null=True)),
             ],
@@ -151,7 +152,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Individual',
             fields=[
-                ('customer', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='shop_app.customer')),
+                ('customer',
+                 models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False,
+                                      to='shop_app.customer')),
                 ('individual_name', models.CharField(blank=True, max_length=255, null=True)),
                 ('surname', models.CharField(blank=True, max_length=255, null=True)),
             ],

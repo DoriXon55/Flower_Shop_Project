@@ -116,18 +116,7 @@ h1, h2, h4 {
     transform: scale(1.05); /* Powiększenie przycisku na hover */
 }
 
-/* Responsywność */
-@media (max-width: 768px) {
-    .flower-card {
-        flex: 1 1 calc(50% - 20px);
-    }
-}
 
-@media (max-width: 480px) {
-    .flower-card {
-        flex: 1 1 100%;
-    }
-}
 
 /* Stopka (opcjonalne dopracowanie wyglądu) */
 footer {
@@ -281,16 +270,7 @@ form select {
     display: block;
 }
 
-/* Responsive Styles */
-@media (max-width: 768px) {
-    .cart-item {
-        flex: 1 1 calc(100% - 20px);
-    }
 
-    form {
-        width: 90%;
-    }
-}
 /* Kontener podsumowania koszyka */
 .cart-summary-container {
     text-align: center;
@@ -326,6 +306,7 @@ form select {
     background-color: #45a049;
     transform: scale(1.05);
 }
+
 /* Kontener wiadomości */
 #messages {
     position: fixed;
@@ -380,6 +361,28 @@ form select {
     }
     to {
         width: 0;
+    }
+}
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .cart-item {
+        flex: 1 1 calc(100% - 20px);
+    }
+
+    form {
+        width: 90%;
+    }
+}
+/* Responsywność */
+@media (max-width: 768px) {
+    .flower-card {
+        flex: 1 1 calc(50% - 20px);
+    }
+}
+
+@media (max-width: 480px) {
+    .flower-card {
+        flex: 1 1 100%;
     }
 }
 

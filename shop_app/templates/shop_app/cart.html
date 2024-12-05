@@ -2,26 +2,28 @@
 {% load static %}
 {% block title %}Cart{% endblock %}
 {% block content %}
-<h1>Koszyk</h1>
+    <h1>Koszyk</h1>
 
-<div class="cart-items">
-    {% for item in cart_items %}
-        <div class="cart-item">
-            <img src="{% static 'images/' %}{{ item.flower.flower_name|lower }}.jpg" alt="{{ item.flower.flower_name }}" alt="Zdjęcie kwiata {{item.flower.flower_name}}" width="300" height="300">
-            <h4>{{ item.flower.flower_name }}</h4>
-            <p>Cena: {{ item.flower.price }} PLN</p>
-            <p>Ilość: {{ item.quantity }}</p>
-            <p>Razem: {{ item.flower.price|floatformat:2|add:item.quantity }} PLN</p>
-            <a href="{% url 'remove_from_cart' item.flower.flower_id %}">Usuń element z koszyka</a>
-        </div>
-    {% endfor %}
-</div>
-<div class="cart-summary-container">
-    <p class="cart-summary">
-        <strong>Cena całego zamówienia: {{ total_price }} PLN</strong>
-    </p>
-    <a href="{% url 'checkout' %}" class="checkout-button">Przejdź do płatności</a>
-</div>
+    <div class="cart-items">
+        {% for item in cart_items %}
+            <div class="cart-item">
+                <img src="{% static 'images/' %}{{ item.flower.flower_name|lower }}.jpg"
+                     alt="{{ item.flower.flower_name }}" alt="Zdjęcie kwiata {{ item.flower.flower_name }}" width="300"
+                     height="300">
+                <h4>{{ item.flower.flower_name }}</h4>
+                <p>Cena: {{ item.flower.price }} PLN</p>
+                <p>Ilość: {{ item.quantity }}</p>
+                <p>Razem: {{ item.flower.price|floatformat:2|add:item.quantity }} PLN</p>
+                <a href="{% url 'remove_from_cart' item.flower.flower_id %}">Usuń element z koszyka</a>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="cart-summary-container">
+        <p class="cart-summary">
+            <strong>Cena całego zamówienia: {{ total_price }} PLN</strong>
+        </p>
+        <a href="{% url 'checkout' %}" class="checkout-button">Przejdź do płatności</a>
+    </div>
 
 
 {% endblock %}

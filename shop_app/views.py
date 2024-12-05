@@ -18,6 +18,7 @@ def home(request):
         'view_type': view_type
     })
 
+
 def flower_detail(request, flower_id):
     flower = get_object_or_404(Flower, flower_id=flower_id)
     if request.method == 'POST':  # Dodanie do koszyka
@@ -26,6 +27,8 @@ def flower_detail(request, flower_id):
         request.session['cart'] = cart
         return redirect('cart')
     return render(request, 'shop_app/flower_detail.html', {'flower': flower})
+
+
 def cart_view(request):
     cart = request.session.get('cart', {})
     flowers = Flower.objects.filter(flower_id__in=cart.keys())
@@ -47,7 +50,6 @@ def cart_view(request):
         'cart_items': cart_items,
         'total_price': total_price
     })
-
 
 
 def add_to_cart(request, flower_id):
@@ -78,6 +80,7 @@ def add_to_cart(request, flower_id):
 
     return redirect('cart')  # Przekierowanie do strony z koszykiem
 
+
 def remove_from_cart(request, flower_id):
     cart = request.session.get('cart', {})
     if str(flower_id) in cart:
@@ -88,6 +91,11 @@ def remove_from_cart(request, flower_id):
 
 from django.core.exceptions import ValidationError
 
+
+from django.shortcuts import redirect, render
+from django.contrib import messages
+from django.core.exceptions import ValidationError
+from .models import Customer, Individual, Firm
 
 def register(request):
     if request.method == 'POST':
@@ -100,12 +108,7 @@ def register(request):
             return redirect('register')
 
         try:
-            # Create the common Customer
-            customer = Customer.objects.create(
-                customer_contact=contact,
-                address=address
-            )
-
+            # Sprawdzenie dla użytkownika indywidualnego
             if user_type == 'individual':
                 first_name = request.POST.get('first_name')
                 last_name = request.POST.get('last_name')
@@ -113,11 +116,23 @@ def register(request):
                 if not first_name or not last_name:
                     raise ValidationError("First Name and Last Name are required for individuals.")
 
+                # Sprawdzenie, czy użytkownik indywidualny już istnieje
+                if Individual.objects.filter(customer__customer_contact=contact, individual_name=first_name).exists():
+                    messages.error(request, "A user with this contact and first name already exists.")
+                    return redirect('home')
+
+                # Utworzenie użytkownika indywidualnego
+                customer = Customer.objects.create(
+                    customer_contact=contact,
+                    address=address
+                )
                 Individual.objects.create(
                     customer=customer,
                     individual_name=first_name,
                     surname=last_name
                 )
+
+            # Sprawdzenie dla firmy
             elif user_type == 'firm':
                 firm_name = request.POST.get('firm_name')
                 nip = request.POST.get('NIP')
@@ -125,6 +140,16 @@ def register(request):
                 if not firm_name or not nip:
                     raise ValidationError("Firm Name and NIP are required for firms.")
 
+                # Sprawdzenie, czy firma już istnieje
+                if Firm.objects.filter(customer__customer_contact=contact, NIP=nip).exists():
+                    messages.error(request, "A firm with this contact and NIP already exists.")
+                    return redirect('home')
+
+                # Utworzenie firmy
+                customer = Customer.objects.create(
+                    customer_contact=contact,
+                    address=address
+                )
                 Firm.objects.create(
                     customer=customer,
                     name=firm_name,
@@ -185,8 +210,6 @@ def checkout(request):
             messages.error(request, "Nieprawidłowy typ użytkownika.")
             return redirect('checkout')
 
-
-
         # Step 3: Assign a random Employee (1-15)
         employee = Employee.objects.order_by('?').first()
 
@@ -229,6 +252,7 @@ def checkout(request):
         'payment_types': payment_types,
         'delivery_names': delivery_names
     })
+
 
 def order_confirmation(request, order_id):
     return HttpResponse(f"Order placed successfully! Your order number is {order_id}.")
