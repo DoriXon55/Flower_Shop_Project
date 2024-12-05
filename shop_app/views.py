@@ -164,6 +164,12 @@ def register(request):
 
     return render(request, 'shop_app/register.html')
 
+from django.shortcuts import redirect, render
+from django.contrib import messages
+from .models import Customer, Individual, Firm, Flower, OrderFlower, Order, PaymentType, DeliveryName, Status, Delivery, Employee
+from datetime import timedelta, datetime
+from django.db.models import Q
+
 def checkout(request):
     # Pobieranie koszyka z sesji
     cart = request.session.get('cart', {})
@@ -172,63 +178,57 @@ def checkout(request):
     total_price = sum(item['flower'].price * item['quantity'] for item in cart_items)
 
     if request.method == 'POST':
-        # Krok 1: Pobieranie danych z formularza
+        action = request.POST.get('action')
         user_type = request.POST.get('user_type')
         payment_type_id = request.POST.get('payment_type')
         delivery_name_id = request.POST.get('delivery_name')
-        contact = request.POST.get('contact')
-        address = request.POST.get('address')
-
-        # Walidacja danych formularza
-        if not user_type or not contact or not address:
-            messages.error(request, "Wypełnij wszystkie wymagane pola.")
-            return redirect('checkout')
 
         customer = None
 
-        # Logika dla użytkownika indywidualnego
-        if user_type == 'individual':
-            first_name = request.POST.get('first_name')
-            last_name = request.POST.get('last_name')
-            if not first_name or not last_name:
-                messages.error(request, "Wypełnij wszystkie pola dla klienta indywidualnego.")
+        if action == 'login':
+            customer_contact = request.POST.get('customer_contact_login')
+            if user_type == 'individual':
+                individual_name = request.POST.get('individual_name_login')
+                customer = Customer.objects.filter(
+                    Q(customer_contact=customer_contact) &
+                    Q(individual__individual_name=individual_name)
+                ).first()
+            elif user_type == 'firm':
+                nip = request.POST.get('nip_login')
+                customer = Customer.objects.filter(
+                    Q(customer_contact=customer_contact) &
+                    Q(firm__NIP=nip)
+                ).first()
+
+            if customer:
+                messages.success(request, "Zalogowano pomyślnie! Witaj ponownie.")
+            else:
+                messages.error(request, "Nie znaleziono użytkownika. Spróbuj ponownie lub zarejestruj się.")
                 return redirect('checkout')
 
-            # Sprawdzenie czy klient indywidualny już istnieje
-            individual = Individual.objects.filter(
-                customer__customer_contact=contact
-            ).first()
+        elif action == 'register':
+            customer_contact = request.POST.get('customer_contact_register')
+            address = request.POST.get('address')
+            if user_type == 'individual':
+                individual_name = request.POST.get('individual_name_register')
+                last_name = request.POST.get('last_name')
+                if Customer.objects.filter(customer_contact=customer_contact).exists():
+                    messages.error(request, "Użytkownik z takim numerem telefonu już istnieje. Spróbuj się zalogować.")
+                    return redirect('checkout')
+                customer = Customer.objects.create(customer_contact=customer_contact, address=address)
+                Individual.objects.create(customer=customer, individual_name=individual_name, surname=last_name)
+            elif user_type == 'firm':
+                nip = request.POST.get('nip_register')
+                firm_name = request.POST.get('firm_name')
+                if Customer.objects.filter(customer_contact=customer_contact).exists():
+                    messages.error(request, "Użytkownik z takim numerem telefonu już istnieje. Spróbuj się zalogować.")
+                    return redirect('checkout')
+                customer = Customer.objects.create(customer_contact=customer_contact, address=address)
+                Firm.objects.create(customer=customer, NIP=nip, name=firm_name)
+            messages.success(request, "Rejestracja przebiegła pomyślnie! Możesz teraz złożyć zamówienie.")
 
-            if individual:
-                customer = individual.customer
-            else:
-                # Tworzenie nowego klienta indywidualnego
-                customer = Customer.objects.create(customer_contact=contact, address=address)
-                Individual.objects.create(customer=customer, individual_name=first_name, surname=last_name)
-
-        # Logika dla firmy
-        elif user_type == 'firm':
-            firm_name = request.POST.get('firm_name')
-            nip = request.POST.get('NIP')
-            if not firm_name or not nip:
-                messages.error(request, "Wypełnij wszystkie pola dla firmy.")
-                return redirect('checkout')
-
-            # Sprawdzenie czy firma już istnieje
-            firm = Firm.objects.filter(
-                customer__customer_contact=contact,
-                NIP=nip
-            ).first()
-
-            if firm:
-                customer = firm.customer
-            else:
-                # Tworzenie nowej firmy
-                customer = Customer.objects.create(customer_contact=contact, address=address)
-                Firm.objects.create(customer=customer, name=firm_name, NIP=nip)
-
-        else:
-            messages.error(request, "Nieprawidłowy typ użytkownika.")
+        if not customer:
+            messages.error(request, "Wystąpił błąd. Spróbuj ponownie.")
             return redirect('checkout')
 
         # Krok 3: Wybór losowego pracownika
@@ -273,7 +273,5 @@ def checkout(request):
         'payment_types': payment_types,
         'delivery_names': delivery_names
     })
-
-
 def order_confirmation(request, order_id):
     return HttpResponse(f"Zamówienie zostało złożone pomyślnie! Twój numer zamówienia to {order_id}.")

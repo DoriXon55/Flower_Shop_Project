@@ -354,6 +354,17 @@ form select {
     animation: progress-bar 3s linear forwards;
 }
 
+/* Ensure uniform width for select and input fields */
+form input, form select {
+    width: 100%; /* Set width to 100% */
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+    display: block;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
 /* Animacja */
 @keyframes progress-bar {
     from {

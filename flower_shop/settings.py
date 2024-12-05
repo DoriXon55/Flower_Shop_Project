@@ -53,7 +53,7 @@ ROOT_URLCONF = 'flower_shop.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],  # Ścieżka do folderu templates
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -65,6 +65,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'flower_shop.wsgi.application'
 
