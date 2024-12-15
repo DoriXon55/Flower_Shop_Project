@@ -6,23 +6,25 @@
 <h1>Checkout</h1>
 <form method="POST" action="{% url 'checkout' %}">
     {% csrf_token %}
-    <label for="action">Action:</label>
+    <label for="action">Działanie:</label>
     <select name="action" id="action" required>
-        <option value="login">Login</option>
-        <option value="register">Register</option>
+        <option value="login">Logowanie</option>
+        <option value="register">Rejestracja</option>
     </select>
 
-    <label for="user_type">User Type:</label>
+    <label for="user_type">Rodzaj użytkownika:</label>
     <select name="user_type" id="user_type" required>
-        <option value="individual">Individual</option>
-        <option value="firm">Firm</option>
+        <option value="individual">Klient indywidualny</option>
+        <option value="firm">Firma</option>
     </select>
 
     <div id="login-fields" style="display: none;">
-        <label for="customer_contact_login">Contact Number:</label>
-        <input type="text" id="customer_contact_login" name="customer_contact_login">
+        <label for="customer_contact_login">Numer telefonu: (format +xx-xxx-xxx)</label>
+        <input type="text" id="customer_contact_login" name="customer_contact_login" 
+       pattern="^\+48-\d{3}-\d{3}-\d{3}$" 
+       title="Wprowadź numer w formacie +xx-xxx-xxx-xxx">
         <div id="individual-login-fields" style="display: none;">
-            <label for="individual_name_login">First Name:</label>
+            <label for="individual_name_login">Imię:</label>
             <input type="text" id="individual_name_login" name="individual_name_login">
         </div>
         <div id="firm-login-fields" style="display: none;">
@@ -32,39 +34,41 @@
     </div>
 
     <div id="register-fields" style="display: none;">
-        <label for="customer_contact_register">Contact Number:</label>
-        <input type="text" id="customer_contact_register" name="customer_contact_register">
-        <label for="address">Address:</label>
+        <label for="customer_contact_register">Numer telefonu: (format +xx-xxx-xxx)</label>
+        <input type="text" id="customer_contact_register" name="customer_contact_register" 
+       pattern="^\+48-\d{3}-\d{3}-\d{3}$" 
+       title="Wprowadź numer w formacie +xx-xxx-xxx-xxx">
+        <label for="address">Adres zamieszkania:</label>
         <input type="text" id="address" name="address">
         <div id="individual-register-fields" style="display: none;">
-            <label for="individual_name_register">First Name:</label>
+            <label for="individual_name_register">Imię:</label>
             <input type="text" id="individual_name_register" name="individual_name_register">
-            <label for="last_name">Last Name:</label>
+            <label for="last_name">Nazwisko:</label>
             <input type="text" id="last_name" name="last_name">
         </div>
         <div id="firm-register-fields" style="display: none;">
             <label for="nip_register">NIP:</label>
             <input type="text" id="nip_register" name="nip_register">
-            <label for="firm_name">Firm Name:</label>
+            <label for="firm_name">Nazwa Firmy:</label>
             <input type="text" id="firm_name" name="firm_name">
         </div>
     </div>
 
-    <label>Payment Type:</label>
+    <label>Sposób płatności:</label>
     <select name="payment_type">
         {% for payment in payment_types %}
             <option value="{{ payment.payment_type_id }}">{{ payment.payment_name }}</option>
         {% endfor %}
     </select>
 
-    <label>Delivery Option:</label>
+    <label>Dostawa:</label>
     <select name="delivery_name">
         {% for delivery in delivery_names %}
             <option value="{{ delivery.delivery_name_id }}">{{ delivery.firm_name }}</option>
         {% endfor %}
     </select>
 
-    <button type="submit">Place Order</button>
+    <button type="submit">Złóż zamówienie</button>
 </form>
 
 <script>
@@ -109,5 +113,16 @@
     if (orderConfirmationMessage) {
         redirectToHome();
     }
+    document.querySelectorAll('input[name="customer_contact_login"], input[name="customer_contact_register"]').forEach(input => {
+    input.addEventListener('input', function () {
+        const regex = /^\+48-\d{3}-\d{3}-\d{3}$/;
+        if (!regex.test(this.value)) {
+            this.setCustomValidity("Podaj numer telefonu w formacie +48-123-456-789.");
+        } else {
+            this.setCustomValidity("");
+        }
+    });
+});
+
 </script>
 {% endblock %}

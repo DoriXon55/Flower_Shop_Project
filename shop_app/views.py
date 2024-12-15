@@ -169,7 +169,11 @@ from django.contrib import messages
 from .models import Customer, Individual, Firm, Flower, OrderFlower, Order, PaymentType, DeliveryName, Status, Delivery, Employee
 from datetime import timedelta, datetime
 from django.db.models import Q
+import re
 
+def validate_phone_number(phone):
+    pattern = r'^\+48-\d{3}-\d{3}-\d{3}$'  # Format: +48-123-456-789
+    return re.match(pattern, phone)
 def checkout(request):
     # Pobieranie koszyka z sesji
     cart = request.session.get('cart', {})
@@ -195,6 +199,9 @@ def checkout(request):
 
         if action == 'login':
             customer_contact = request.POST.get('customer_contact_login')
+            if not validate_phone_number(customer_contact):
+                return redirect('checkout')
+
             if user_type == 'individual':
                 individual_name = request.POST.get('individual_name_login')
                 customer = Customer.objects.filter(
@@ -216,6 +223,9 @@ def checkout(request):
 
         elif action == 'register':
             customer_contact = request.POST.get('customer_contact_register')
+            if not validate_phone_number(customer_contact):
+                return redirect('checkout')
+
             address = request.POST.get('address')
             if user_type == 'individual':
                 individual_name = request.POST.get('individual_name_register')
