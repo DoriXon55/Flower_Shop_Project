@@ -14,7 +14,7 @@ The project was carried out for the purpose of completing a course at university
 
 ## 🚀 Features
 - Online flower shop interface
-- Database management system
+- Database management system (for MySQL)
 - User-friendly shopping experience
 - Modern and responsive design
 
