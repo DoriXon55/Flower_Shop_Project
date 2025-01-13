@@ -3,6 +3,8 @@
 ## 📝 Description
 A comprehensive flower shop management system built with Django framework. This project provides a complete solution for managing a flower shop's inventory, orders, and customer interactions through a modern web interface.
 
+The project was carried out for credit purposes, therefore it does not have all functionalities developed.
+
 ## 🌟 Features
 - **Product Management**
   - Add, edit, and remove flower products
@@ -11,8 +13,7 @@ A comprehensive flower shop management system built with Django framework. This 
   
 - **Order Processing**
   - Create and manage customer orders
-  - Track order status
-  - Process payments
+  - "Process payments"
   
 - **User Interface**
   - Responsive design for all devices
