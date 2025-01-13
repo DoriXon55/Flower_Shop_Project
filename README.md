@@ -37,7 +37,7 @@ The project was carried out for credit purposes, therefore it does not have all 
 Before you begin, ensure you have the following installed:
 1. Python 3.x ([Download Python](https://www.python.org/downloads/))
 2. Django Framework
-3. Database Management System (PostgreSQL or MySQL)
+3. Database Management System (MySQL)
 
 ## 📥 Installation Guide
 
@@ -48,7 +48,10 @@ Before you begin, ensure you have the following installed:
 ```bash
 python --version
 ```
-- isntall django framework (pip install django)
+- Install django framework
+```bash
+pip install django
+```
 - Clone project:
 ```bash
 git clone https://github.com/DoriXon55/Flower_Shop_For_Database.git
