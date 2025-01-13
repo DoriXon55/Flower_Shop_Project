@@ -61,12 +61,12 @@ cd Flower_Shop_For_Database
 1. Install your preferred database system (MySQL)
 2. Create a new database
 3. Restore the database using the backup file from the repository:
-        Location: [finalDatabaseDjangoBackup.sql]
+        Location: [Database_backupDjangoFinal.sql]
         Follow your database system's restore procedure
 
 
 ## 📞 Support
-Open an issue on GitHub
-Contact: [dorianzasada@gmail.com]
+- Open an issue on GitHub
+- Contact: [dorianzasada@gmail.com]
 
    
