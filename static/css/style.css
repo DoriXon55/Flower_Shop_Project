@@ -118,7 +118,6 @@ h1, h2, h4 {
 
 
 
-/* Stopka (opcjonalne dopracowanie wyglądu) */
 footer {
     text-align: center;
     padding: 20px;
@@ -330,14 +329,12 @@ form select {
     overflow: hidden;
 }
 
-/* Zielony dla sukcesu */
 .message.success {
     background-color: #d4edda;
     color: #155724;
     border: 1px solid #c3e6cb;
 }
 
-/* Czerwony dla błędu */
 .message.error {
     background-color: #f8d7da;
     color: #721c24;
@@ -354,18 +351,16 @@ form select {
     animation: progress-bar 3s linear forwards;
 }
 
-/* Ensure uniform width for select and input fields */
 form input, form select {
-    width: 100%; /* Set width to 100% */
+    width: 100%; 
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 1em;
     display: block;
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    box-sizing: border-box; 
 }
-/* Animacja */
 @keyframes progress-bar {
     from {
         width: 100%;
@@ -374,7 +369,6 @@ form input, form select {
         width: 0;
     }
 }
-/* Responsive Styles */
 @media (max-width: 768px) {
     .cart-item {
         flex: 1 1 calc(100% - 20px);
@@ -384,7 +378,6 @@ form input, form select {
         width: 90%;
     }
 }
-/* Responsywność */
 @media (max-width: 768px) {
     .flower-card {
         flex: 1 1 calc(50% - 20px);
